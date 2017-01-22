@@ -46,7 +46,9 @@ var (
 	errNilSink = errors.New("can't write encoded message a nil WriteSyncer")
 )
 
+// Replacer is the interface that replaces a list of strings with replacements.
 type Replacer interface {
+	// Replace returns a copy of s with all replacements performed.
 	Replace(s string) string
 }
 
