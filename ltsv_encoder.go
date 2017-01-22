@@ -340,3 +340,10 @@ func LTSVMessageLabel(label string) LTSVOption {
 		enc.messageLabel = label
 	})
 }
+
+// LTSVReplacer sets the replacer for log values.
+func LTSVReplacer(replacer Replacer) LTSVOption {
+	return ltsvOptionFunc(func(enc *ltsvEncoder) {
+		enc.replacer = replacer
+	})
+}
