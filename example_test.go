@@ -95,7 +95,7 @@ func Example_nest() {
 		ltsv.NewLTSVEncoder(ltsv.LTSVNoTime()), // drop timestamps in tests
 	)
 
-	// We'd like the logging context to be {"outer":{"inner":42}}
+	// We'd like the logging context to be outer:{"inner":42}
 	nest := zap.Nest("outer", zap.Int("inner", 42))
 	logger.Info("Logging a nested field.", nest)
 
