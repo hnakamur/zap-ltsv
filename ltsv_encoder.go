@@ -79,6 +79,13 @@ type ltsvEncoder struct {
 // NewLTSVEncoder creates a line-oriented LTSV encoder.
 // See http://ltsv.org/ for LTSV (Labeled Tab-separated Values).
 // By default, the encoder uses RFC3339-formatted timestamps.
+// You can change this format with the LTSVTimeFormat option.
+//
+// The tab \t, newline \n and carriage-return \r are escaped as
+// \\t, \\n, \\r respectively.
+// You can change this behavior with the LTSVReplacer option.
+//
+// Nested values are encoded in JSON format.  See Example (Nest).
 func NewLTSVEncoder(options ...LTSVOption) zap.Encoder {
 	enc := ltsvPool.Get().(*ltsvEncoder)
 	enc.truncate()
