@@ -90,7 +90,7 @@ func Example_fileOutput() {
 	// level:I	msg:This is an info log.	foo:42
 }
 
-func ExampleNest() {
+func Example_nest() {
 	logger := zap.New(
 		ltsv.NewLTSVEncoder(ltsv.LTSVNoTime()), // drop timestamps in tests
 	)
@@ -103,7 +103,7 @@ func ExampleNest() {
 	// level:I	msg:Logging a nested field.	outer:{"inner":42}
 }
 
-func ExampleNew() {
+func Example_new() {
 	// The default logger outputs to standard out and only writes logs that are
 	// Info level or higher.
 	logger := zap.New(
@@ -118,7 +118,7 @@ func ExampleNew() {
 	// level:I	msg:This is an info log.
 }
 
-func ExampleTee() {
+func Example_tee() {
 	// Multiple loggers can be combine using Tee.
 	output := zap.Output(os.Stdout)
 	logger := zap.Tee(
@@ -134,7 +134,7 @@ func ExampleTee() {
 	// level:I	msg:this log gets encoded three times, differently	foo:42
 }
 
-func ExampleMultiWriteSyncer() {
+func Example_multiWriteSyncer() {
 	// To send output to multiple outputs, use MultiWriteSyncer.
 	textLogger := zap.New(
 		ltsv.NewLTSVEncoder(ltsv.LTSVNoTime()), // drop timestamps in tests
@@ -147,7 +147,7 @@ func ExampleMultiWriteSyncer() {
 	// level:I	msg:One becomes two
 }
 
-func ExampleNew_options() {
+func Example_newOptions() {
 	// We can pass multiple options to the New method to configure the logging
 	// level, output location, or even the initial context.
 	logger := zap.New(
@@ -164,7 +164,7 @@ func ExampleNew_options() {
 	// level:I	msg:This is an info log.	count:1
 }
 
-func ExampleCheckedMessage() {
+func Example_checkedMessage() {
 	logger := zap.New(
 		ltsv.NewLTSVEncoder(ltsv.LTSVNoTime()), // drop timestamps in tests
 	)
