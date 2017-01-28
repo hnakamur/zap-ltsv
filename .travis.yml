@@ -5,4 +5,4 @@ go:
   - 1.8rc3
 install:
   - go get github.com/uber-go/zap
-  - "(cd ${TRAVIS_BUILD_DIR}/../../uber-go-zap && make depdendencies)"
+  - "(cd ${TRAVIS_BUILD_DIR}/../../uber-go/zap && make depdendencies)"
