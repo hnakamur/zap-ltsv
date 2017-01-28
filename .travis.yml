@@ -4,4 +4,5 @@ go:
   - 1.7.x
   - 1.8rc3
 install:
-  - go get github.com/uber-go/zap/...
+  # ignore error "no buildable Go source files"
+  - go get github.com/uber-go/zap/... || :
