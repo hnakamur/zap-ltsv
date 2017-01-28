@@ -1,5 +1,5 @@
-hash: f598fa677cb4dc8be4f89db70fad0ec2e7953b777383e8679e3bcc76cf23c6b8
-updated: 2017-01-28T12:51:13.570976633+09:00
+hash: 633a49567334ce6cedea01827387c9678e9367585e9d4c897677a844af694238
+updated: 2017-01-28T12:56:06.843828174+09:00
 imports:
 - name: github.com/uber-go/atomic
   version: 3b8db5e93c4c02efbc313e17b2e796b0914a01fb
@@ -16,6 +16,10 @@ testImports:
   version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
   subpackages:
   - spew
+- name: github.com/golang/lint
+  version: 206c0f020eba0f7fbcfbc467a5eb808037df2ed6
+  subpackages:
+  - golint
 - name: github.com/mattn/goveralls
   version: 61ac1a6b48f7f76ff3d14e00d3192e7dd0b9db91
 - name: github.com/pborman/uuid
@@ -28,3 +32,7 @@ testImports:
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
   - assert
+- name: golang.org/x/tools
+  version: f8ed2e405fdcbb42c55233531ad98721e6d1cb3e
+  subpackages:
+  - cover

@@ -8,6 +8,13 @@ testImport:
   - assert
 - package: github.com/mattn/goveralls
 - package: github.com/pborman/uuid
+- package: golang.org/x/tools
+  subpackages:
+  - cover
+- package: golang.org/x/tools/cover
+- package: github.com/golang/lint
+  subpackages:
+  - golint
 - package: github.com/axw/gocov
   subpackages:
   - gocov
