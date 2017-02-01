@@ -24,7 +24,9 @@ import "bytes"
 
 // LTSVStack returns stacktrace formatted in one line which can be used as a LTSV value.
 func LTSVStack() string {
-	return formatStacktraceInOneLine(0, takeStacktrace(nil, false))
+	// We remove two traces here,
+	// one for LTSVStack and one for takeStacktrace.
+	return formatStacktraceInOneLine(2, takeStacktrace(nil, false))
 }
 
 func formatStacktraceInOneLine(skip int, s string) string {
