@@ -4,7 +4,9 @@ go:
   - 1.5
   - 1.6
   - 1.7
-  - tip
+  # NOTE: Stop using tip to avoid the following error on Travis CI:
+  # I don't have any idea what to do with 'tip'.
+  # - tip
 env:
   global:
     - GO15VENDOREXPERIMENT=1
