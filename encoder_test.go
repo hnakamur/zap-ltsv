@@ -139,6 +139,13 @@ func TestEncodeEntry(t *testing.T) {
 				{
 					ent: zapcore.Entry{},
 					fields: []zapcore.Field{
+						zap.Complex128s("a", []complex128{1i, 1 + 2i, -1}),
+					},
+					want: "a:[\"0+1i\",\"1+2i\",\"-1+0i\"]\n",
+				},
+				{
+					ent: zapcore.Entry{},
+					fields: []zapcore.Field{
 						zap.Duration("a", time.Duration(time.Minute+2*time.Second)),
 					},
 					want: "a:1m2s\n",
