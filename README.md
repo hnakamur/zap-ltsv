@@ -6,8 +6,7 @@ A [Labeled Tab-separated Values (LTSV)](http://ltsv.org/) encoder for [uber-go/z
 ## Installation
 
 ```
-go get -u github.com/uber-go/zap
-go get -u github.com/hnakamur/zap-ltsv
+go get -u github.com/hnakamur/zap-ltsv/...
 ```
 
 ## Examples

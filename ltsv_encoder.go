@@ -1,5 +1,5 @@
 // Copyright (c) 2016 Uber Technologies, Inc.
-// Copyright (c) 2017 Hiraaki Nakamura
+// Copyright (c) 2017 Hiroaki Nakamura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,12 +46,6 @@ var (
 	errNilSink = errors.New("can't write encoded message a nil WriteSyncer")
 )
 
-// Replacer is the interface that replaces a list of strings with replacements.
-type Replacer interface {
-	// Replace returns a copy of s with all replacements performed.
-	Replace(s string) string
-}
-
 var ltsvPool = sync.Pool{New: func() interface{} {
 	return &ltsvEncoder{
 		bytes:        make([]byte, 0, _initialBufSize),
@@ -73,7 +67,7 @@ type ltsvEncoder struct {
 	levelLabel   string
 	messageLabel string
 	nestedLevel  int
-	replacer     Replacer
+	replacer     *strings.Replacer
 }
 
 // NewLTSVEncoder creates a line-oriented LTSV encoder.
@@ -347,12 +341,5 @@ func LTSVNoLevel() LTSVOption {
 func LTSVMessageLabel(label string) LTSVOption {
 	return ltsvOptionFunc(func(enc *ltsvEncoder) {
 		enc.messageLabel = label
-	})
-}
-
-// LTSVReplacer sets the replacer for log values.
-func LTSVReplacer(replacer Replacer) LTSVOption {
-	return ltsvOptionFunc(func(enc *ltsvEncoder) {
-		enc.replacer = replacer
 	})
 }
