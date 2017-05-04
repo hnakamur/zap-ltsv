@@ -1,4 +1,5 @@
 // Copyright (c) 2016 Uber Technologies, Inc.
+// Copyright (c) 2017 Hiroaki Nakamura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +21,10 @@
 
 package ltsv
 
-import (
-	"testing"
+import "go.uber.org/zap/zapcore"
 
-	"github.com/stretchr/testify/assert"
-)
-
-func TestTakeStacktrace(t *testing.T) {
-	// Even if we pass a tiny buffer, takeStacktrace should allocate until it
-	// can capture the whole stacktrace.
-	traceNil := takeStacktrace(nil, false)
-	traceTiny := takeStacktrace(make([]byte, 1), false)
-	for _, trace := range []string{traceNil, traceTiny} {
-		// The top frame should be takeStacktrace.
-		assert.Contains(t, trace, "ltsv.takeStacktrace", "Stacktrace should contain the takeStacktrace function.")
-		// The stacktrace should also capture its immediate caller.
-		assert.Contains(t, trace, "TestTakeStacktrace", "Stacktrace should contain the test function.")
+func addFields(enc zapcore.ObjectEncoder, fields []zapcore.Field) {
+	for i := range fields {
+		fields[i].AddTo(enc)
 	}
 }
