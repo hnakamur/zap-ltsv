@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"math/cmplx"
 	"testing"
 	"time"
 
@@ -133,13 +134,34 @@ func TestEncodeEntry(t *testing.T) {
 					ent: zapcore.Entry{},
 					fields: []zapcore.Field{
 						zap.Complex128("a", 1+2i),
+						zap.Complex128("b", +1i),
+						zap.Complex128("c", -3),
+						zap.Complex128("d", cmplx.NaN()),
+						zap.Complex128("e", cmplx.Inf()),
+						zap.Complex128("f", -cmplx.Inf()),
 					},
-					want: "a:\"1+2i\"\n",
+					want: "a:1+2i\tb:0+1i\tc:-3+0i\td:NaN+NaNi\te:+Inf++Infi\tf:-Inf+-Infi\n",
 				},
 				{
 					ent: zapcore.Entry{},
 					fields: []zapcore.Field{
-						zap.Complex128s("a", []complex128{1i, 1 + 2i, -1}),
+						zap.Complex128s("a", []complex128{1i, 1 + 2i, -1, cmplx.NaN(), cmplx.Inf(), -cmplx.Inf()}),
+					},
+					want: "a:[\"0+1i\",\"1+2i\",\"-1+0i\",\"NaN+NaNi\",\"+Inf++Infi\",\"-Inf+-Infi\"]\n",
+				},
+				{
+					ent: zapcore.Entry{},
+					fields: []zapcore.Field{
+						zap.Complex64("a", 1+2i),
+						zap.Complex64("b", +1i),
+						zap.Complex64("c", -3),
+					},
+					want: "a:1+2i\tb:0+1i\tc:-3+0i\n",
+				},
+				{
+					ent: zapcore.Entry{},
+					fields: []zapcore.Field{
+						zap.Complex64s("a", []complex64{1i, 1 + 2i, -1}),
 					},
 					want: "a:[\"0+1i\",\"1+2i\",\"-1+0i\"]\n",
 				},
