@@ -85,7 +85,7 @@ func TestEncodeEntry(t *testing.T) {
 					fields: []zapcore.Field{
 						zap.Time("created_at", time.Date(2017, 5, 3, 21, 9, 11, 980000000, time.UTC)),
 					},
-					want: fmt.Sprintf("created_at:%s\n", time.Date(2017, 5, 3, 21, 9, 11, 980000000, time.UTC).Local().Format("2006-01-02T15:04:05.000-0700")),
+					want: fmt.Sprintf("created_at:%s\n", time.Date(2017, 5, 3, 21, 9, 11, 980000000, time.UTC).Local().Format("2006-01-02T15:04:05.000Z0700")),
 					// NOTE: I would like to time in the specified localation, that is UTC in this case.
 					//want: "created_at:2017-05-03T21:09:11.980Z\n",
 				},
