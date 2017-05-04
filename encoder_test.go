@@ -35,14 +35,6 @@ func TestEncodeEntry(t *testing.T) {
 			}(),
 			cases: []subtestCase{
 				{
-					ent: zapcore.Entry{},
-					fields: []zapcore.Field{
-						zap.Stack("stack"),
-					},
-					// NOTE: Update this value when you edit the source code.
-					want: "stack:go.uber.org/zap.Stack\\n\\t/home/hnakamur/go/src/go.uber.org/zap/field.go:209\\ngithub.com/hnakamur/zap-ltsv_test.TestEncodeEntry\\n\\t/home/hnakamur/go/src/github.com/hnakamur/zap-ltsv/encoder_test.go:40\\ntesting.tRunner\\n\\t/usr/local/go/src/testing/testing.go:657\n",
-				},
-				{
 					ent:  zapcore.Entry{},
 					want: "\n",
 				},
