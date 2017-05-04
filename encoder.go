@@ -298,6 +298,9 @@ func (enc *ltsvEncoder) clone() *ltsvEncoder {
 func (enc *ltsvEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
 	final := enc.clone()
 
+	if final.TimeKey != "" {
+		final.AddTime(final.TimeKey, ent.Time)
+	}
 	if final.LevelKey != "" {
 		final.addKey(final.LevelKey)
 		cur := final.buf.Len()
@@ -307,9 +310,6 @@ func (enc *ltsvEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (
 			// output JSON valid.
 			final.AppendString(ent.Level.String())
 		}
-	}
-	if final.TimeKey != "" {
-		final.AddTime(final.TimeKey, ent.Time)
 	}
 	if ent.LoggerName != "" && final.NameKey != "" {
 		final.addKey(final.NameKey)
