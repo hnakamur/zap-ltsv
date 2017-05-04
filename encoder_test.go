@@ -146,6 +146,13 @@ func TestEncodeEntry(t *testing.T) {
 				{
 					ent: zapcore.Entry{},
 					fields: []zapcore.Field{
+						zap.Durations("a", []time.Duration{120 * time.Millisecond, time.Minute + 2*time.Second}),
+					},
+					want: "a:[\"120ms\",\"1m2s\"]\n",
+				},
+				{
+					ent: zapcore.Entry{},
+					fields: []zapcore.Field{
 						zap.Error(errors.New("error 1")),
 					},
 					want: "error:error 1\n",
