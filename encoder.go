@@ -180,9 +180,13 @@ func (enc *ltsvEncoder) AppendBool(val bool) {
 
 func (enc *ltsvEncoder) AppendByteString(val []byte) {
 	enc.addElementSeparator()
-	enc.buf.AppendByte('"')
-	enc.safeAddByteString(val)
-	enc.buf.AppendByte('"')
+	if enc.nestedLevel == 0 && enc.openNamespaces == 0 {
+		enc.safeAddByteString(val)
+	} else {
+		enc.buf.AppendByte('"')
+		enc.safeAddByteString(val)
+		enc.buf.AppendByte('"')
+	}
 }
 
 func (enc *ltsvEncoder) AppendComplex128(val complex128) {
@@ -226,7 +230,7 @@ func (enc *ltsvEncoder) AppendReflected(val interface{}) error {
 
 func (enc *ltsvEncoder) AppendString(val string) {
 	enc.addElementSeparator()
-	if enc.nestedLevel == 0 {
+	if enc.nestedLevel == 0 && enc.openNamespaces == 0 {
 		enc.safeAddString(val)
 	} else {
 		enc.buf.AppendByte('"')
@@ -351,7 +355,7 @@ func (enc *ltsvEncoder) closeOpenNamespaces() {
 
 func (enc *ltsvEncoder) addKey(key string) {
 	enc.addElementSeparator()
-	if enc.nestedLevel == 0 {
+	if enc.nestedLevel == 0 && enc.openNamespaces == 0 {
 		if strings.ContainsRune(key, ':') {
 			panic("LTSV keys must not contain colon ':'")
 		}
@@ -374,7 +378,7 @@ func (enc *ltsvEncoder) addElementSeparator() {
 	if last < 0 {
 		return
 	}
-	if enc.nestedLevel == 0 {
+	if enc.nestedLevel == 0 && enc.openNamespaces == 0 {
 		if enc.justAfterKey {
 			enc.justAfterKey = false
 		} else {
