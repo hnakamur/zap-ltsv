@@ -25,6 +25,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"math"
+	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -351,6 +352,9 @@ func (enc *ltsvEncoder) closeOpenNamespaces() {
 func (enc *ltsvEncoder) addKey(key string) {
 	enc.addElementSeparator()
 	if enc.nestedLevel == 0 {
+		if strings.ContainsRune(key, ':') {
+			panic("LTSV keys must not contain colon ':'")
+		}
 		enc.safeAddString(key)
 		enc.buf.AppendByte(':')
 		enc.justAfterKey = true
