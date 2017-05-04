@@ -25,7 +25,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"math"
-	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -35,13 +34,7 @@ import (
 )
 
 // For JSON-escaping; see ltsvEncoder.safeAddString below.
-const _hex = "0123456789abcdef"
-
-var ltsvEscaper = strings.NewReplacer(
-	"\t", "\\t",
-	"\n", "\\n",
-	"\r", "\\r",
-)
+const hex = "0123456789abcdef"
 
 type ltsvEncoder struct {
 	*zapcore.EncoderConfig
@@ -471,8 +464,8 @@ func (enc *ltsvEncoder) tryAddRuneSelf(b byte) bool {
 	default:
 		// Encode bytes < 0x20, except for the escape sequences above.
 		enc.buf.AppendString(`\u00`)
-		enc.buf.AppendByte(_hex[b>>4])
-		enc.buf.AppendByte(_hex[b&0xF])
+		enc.buf.AppendByte(hex[b>>4])
+		enc.buf.AppendByte(hex[b&0xF])
 	}
 	return true
 }
