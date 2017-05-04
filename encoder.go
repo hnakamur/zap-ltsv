@@ -49,7 +49,8 @@ type ltsvEncoder struct {
 	spaced         bool // include spaces after colons and commas in JSON
 	openNamespaces int
 
-	nestedLevel int
+	nestedLevel  int
+	justAfterKey bool
 }
 
 var bufferpool = buffer.NewPool()
@@ -161,7 +162,9 @@ func (enc *ltsvEncoder) AddUint64(key string, val uint64) {
 func (enc *ltsvEncoder) AppendArray(arr zapcore.ArrayMarshaler) error {
 	enc.addElementSeparator()
 	enc.buf.AppendByte('[')
+	enc.nestedLevel++
 	err := arr.MarshalLogArray(enc)
+	enc.nestedLevel--
 	enc.buf.AppendByte(']')
 	return err
 }
@@ -169,7 +172,9 @@ func (enc *ltsvEncoder) AppendArray(arr zapcore.ArrayMarshaler) error {
 func (enc *ltsvEncoder) AppendObject(obj zapcore.ObjectMarshaler) error {
 	enc.addElementSeparator()
 	enc.buf.AppendByte('{')
+	enc.nestedLevel++
 	err := obj.MarshalLogObject(enc)
+	enc.nestedLevel--
 	enc.buf.AppendByte('}')
 	return err
 }
@@ -227,9 +232,13 @@ func (enc *ltsvEncoder) AppendReflected(val interface{}) error {
 
 func (enc *ltsvEncoder) AppendString(val string) {
 	enc.addElementSeparator()
-	enc.buf.AppendByte('"')
-	enc.safeAddString(val)
-	enc.buf.AppendByte('"')
+	if enc.nestedLevel == 0 {
+		enc.safeAddString(val)
+	} else {
+		enc.buf.AppendByte('"')
+		enc.safeAddString(val)
+		enc.buf.AppendByte('"')
+	}
 }
 
 func (enc *ltsvEncoder) AppendTime(val time.Time) {
@@ -288,7 +297,6 @@ func (enc *ltsvEncoder) clone() *ltsvEncoder {
 
 func (enc *ltsvEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
 	final := enc.clone()
-	final.buf.AppendByte('{')
 
 	if final.LevelKey != "" {
 		final.addKey(final.LevelKey)
@@ -330,7 +338,6 @@ func (enc *ltsvEncoder) EncodeEntry(ent zapcore.Entry, fields []zapcore.Field) (
 	if ent.Stack != "" && final.StacktraceKey != "" {
 		final.AddString(final.StacktraceKey, ent.Stack)
 	}
-	final.buf.AppendByte('}')
 	final.buf.AppendByte('\n')
 
 	ret := final.buf
@@ -350,12 +357,18 @@ func (enc *ltsvEncoder) closeOpenNamespaces() {
 
 func (enc *ltsvEncoder) addKey(key string) {
 	enc.addElementSeparator()
-	enc.buf.AppendByte('"')
-	enc.safeAddString(key)
-	enc.buf.AppendByte('"')
-	enc.buf.AppendByte(':')
-	if enc.spaced {
-		enc.buf.AppendByte(' ')
+	if enc.nestedLevel == 0 {
+		enc.safeAddString(key)
+		enc.buf.AppendByte(':')
+		enc.justAfterKey = true
+	} else {
+		enc.buf.AppendByte('"')
+		enc.safeAddString(key)
+		enc.buf.AppendByte('"')
+		enc.buf.AppendByte(':')
+		if enc.spaced {
+			enc.buf.AppendByte(' ')
+		}
 	}
 }
 
@@ -364,13 +377,21 @@ func (enc *ltsvEncoder) addElementSeparator() {
 	if last < 0 {
 		return
 	}
-	switch enc.buf.Bytes()[last] {
-	case '{', '[', ':', ',', ' ':
-		return
-	default:
-		enc.buf.AppendByte(',')
-		if enc.spaced {
-			enc.buf.AppendByte(' ')
+	if enc.nestedLevel == 0 {
+		if enc.justAfterKey {
+			enc.justAfterKey = false
+		} else {
+			enc.buf.AppendByte('\t')
+		}
+	} else {
+		switch enc.buf.Bytes()[last] {
+		case '{', '[', ':', ',', ' ':
+			return
+		default:
+			enc.buf.AppendByte(',')
+			if enc.spaced {
+				enc.buf.AppendByte(' ')
+			}
 		}
 	}
 }
